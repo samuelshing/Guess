@@ -47,16 +47,13 @@ class MaterialActivity : AppCompatActivity() {
 	fun check(view: View) {
 		val number = ed_number.text.toString().toInt()
 		val diff = secretNumber.validate(number)
-		var message = getString(R.string.yes_you_got_it)
-		if (diff < 0) {
-			message = getString(R.string.bigger)
-		} else if (diff > 0) {
-			message = getString(R.string.smaller)
+		val message = when {
+			diff < 0 -> getString(R.string.bigger)
+			diff > 0 -> getString(R.string.smaller)
+			diff == 0 && secretNumber.count < 3 -> getString(R.string.excellent) + secretNumber.secret
+			else -> getString(R.string.yes_you_got_it)
 		}
 		counter.text = secretNumber.count.toString()
-		if (diff == 0 && secretNumber.count < 3) {
-			message = "Excellent! The number is " + secretNumber.secret
-		}
 		AlertDialog.Builder(this)
 			.setTitle(getString(R.string.result))
 			.setMessage(message)
