@@ -1,8 +1,11 @@
 package tw.samuel.guess
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import kotlinx.android.synthetic.main.activity_record.*
 
 class RecordActivity : AppCompatActivity() {
@@ -19,6 +22,10 @@ class RecordActivity : AppCompatActivity() {
 				.putInt("COUNT", count)
 				.putString("NICKNAME", nick)
 				.apply()
+			val intent = Intent()
+			intent.putExtra("NICK", nick)
+			setResult(Activity.RESULT_OK, intent)
+			finish()
 		}
 	}
 }

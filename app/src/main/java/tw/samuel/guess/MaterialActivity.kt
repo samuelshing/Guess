@@ -1,5 +1,6 @@
 package tw.samuel.guess
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -20,22 +21,28 @@ class MaterialActivity : AppCompatActivity() {
 		setSupportActionBar(toolbar)
 
 		fab.setOnClickListener { view ->
-			AlertDialog.Builder(this)
-				.setTitle("Replay game")
-				.setMessage("Are you sure?")
-				.setPositiveButton(getString(R.string.ok)) { dialog, which ->
-					secretNumber.reset()
-					counter.text = secretNumber.count.toString()
-					ed_number.setText("")
-				}
-				.setNeutralButton("Cancel", null)
-				.show()
+			replay()
 		}
 		counter.text = secretNumber.count.toString()
 		val count = getSharedPreferences("guess", Context.MODE_PRIVATE).getInt("COUNT", -1)
 		val nick = getSharedPreferences("guess", Context.MODE_PRIVATE).getString("NICKNAME", null)
 		Log.d(TAG, "$nick: $count")
 	}
+
+	private fun replay() {
+		AlertDialog.Builder(this)
+			.setTitle("Replay game")
+			.setMessage("Are you sure?")
+			.setPositiveButton(getString(R.string.ok)) { dialog, which ->
+				secretNumber.reset()
+				counter.text = secretNumber.count.toString()
+				ed_number.setText("")
+			}
+			.setNeutralButton("Cancel", null)
+			.show()
+	}
+
+	private val REQUEST_RECORD: Int = 100
 
 	fun check(view: View) {
 		val number = ed_number.text.toString().toInt()
@@ -57,10 +64,20 @@ class MaterialActivity : AppCompatActivity() {
 				if (diff == 0) {
 					val intent = Intent(this@MaterialActivity, RecordActivity::class.java)
 					intent.putExtra("COUNTER", secretNumber.count)
-					startActivity(intent)
+					startActivityForResult(intent, REQUEST_RECORD)
 				}
 			}
 			.show()
 	}
 
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+		super.onActivityResult(requestCode, resultCode, data)
+		if (requestCode == REQUEST_RECORD) {
+			if (resultCode == Activity.RESULT_OK) {
+				val nickname = data?.getStringExtra("NICK")
+				Log.d(TAG, "onActivityResult: $nickname")
+				replay()
+			}
+		}
+	}
 }
