@@ -32,4 +32,13 @@ class MaterialActivityTest {
 			}
 		}
 	}
+
+	@Test
+	fun replay() {
+		val resources = activityTestRule.activity.resources
+		val secretNumber = activityTestRule.activity.secretNumber
+		onView(withId(R.id.fab)).perform(click())
+		onView(withText(resources.getString(R.string.ok))).perform(click())
+		check(secretNumber.count == 0)
+	}
 }
