@@ -47,6 +47,9 @@ class MaterialActivity : AppCompatActivity() {
 			message = getString(R.string.smaller)
 		}
 		counter.text = secretNumber.count.toString()
+		if (diff == 0 && secretNumber.count < 3) {
+			message = "Excellent! The number is " + secretNumber.secret
+		}
 		AlertDialog.Builder(this)
 			.setTitle(getString(R.string.result))
 			.setMessage(message)
